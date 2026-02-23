@@ -1,0 +1,1 @@
+const usuarioM = require('../Model/UsuarioM');

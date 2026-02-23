@@ -1,0 +1,1 @@
+const actividadM = require('../Model/ActividadesM');
