@@ -4,10 +4,10 @@ const Schema = mongoose.Schema;
 
 const MateriaSchema = new Schema({
     nombre: { type: String, required: true },
-    codigo: { type: String, required: true },
+    Descripcion: { type: String, required: true },
     color: { type: String},
-    periodoId: { type: Schema.Types.ObjectId, ref: 'Periodo', required: true },
-    UsuarioId: { type: Schema.Types.ObjectId, ref: 'Usuario', required: true },
+    periodoId: { type: Schema.Types.ObjectId, ref: 'periodo', required: true },
+    UsuarioId: { type: Schema.Types.ObjectId, ref: 'usuario', required: true },
     activa: { type: Boolean, default: true }
 }, {versionKey: false});
 
