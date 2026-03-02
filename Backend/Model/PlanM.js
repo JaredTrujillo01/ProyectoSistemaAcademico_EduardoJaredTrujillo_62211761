@@ -1,21 +1,19 @@
 const mongoose = require('mongoose');
-const { act } = require('react');
-const schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-const PlanSchema = new schema({
-    UsuarioId: { type: schema.Types.ObjectId, ref: 'usuario', required: true },
-    fechageneracion: { type: Date, default: Date.now },
-    periodoid: { type: schema.Types.ObjectId, ref: 'periodo', required: true },
-    actividades: [
+const PlanSchema = new Schema({
+    usuarioId: { type: Schema.Types.ObjectId, ref: 'usuario', required: true },
+    fechaGeneracion: { type: Date, default: Date.now },
+    periodoId: { type: Schema.Types.ObjectId, ref: 'periodo', required: true },
+    actividadesPlanificadas: [
         {
-        actividadId: { type: schema.Types.ObjectId, ref: 'actividad', required: true },
-        fechaasignada: { type: Date, required: true },
-        horaasignada: { type: String, required: true }
+            actividadId: { type: Schema.Types.ObjectId, ref: 'actividad', required: true },
+            fechaAsignada: { type: Date, required: true },
+            horasAsignadas: { type: Number, required: true, min: 0 }
         }
     ]
-}, {versionKey: false});
+}, { versionKey: false });
 
 const Plan = mongoose.model('planestudio', PlanSchema);
 
 module.exports = Plan;
-

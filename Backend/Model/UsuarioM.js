@@ -6,9 +6,9 @@ const UsuarioSchema = new Schema({
     apellido: { type: String, required: true},
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    rol: { type: String, enum: ['estudiante', 'administrador'], default: 'estudiante' },
+    rol: { type: String, enum: ['estudiante', 'admin'], default: 'estudiante' },
     activo: { type: Boolean, default: true },
-    fecharegistro: { type: Date, default: Date.now }
+    fechaRegistro: { type: Date, default: Date.now }
 }, {versionKey: false});
 
 const Usuario = mongoose.model('usuario', UsuarioSchema);

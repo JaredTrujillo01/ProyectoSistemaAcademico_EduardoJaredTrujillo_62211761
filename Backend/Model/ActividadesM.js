@@ -6,8 +6,8 @@ const actividadSchema = new Schema({
     descripcion: { type: String },
     fechaEntrega: { type: Date, required: true },
     prioridad: { type: String, enum: ['baja', 'media', 'alta'], required: true },
-    estado: { type: String, enum: ['pendiente', 'en_progreso', 'completada'], default: 'pendiente'
-    },
+    estado: { type: String, enum: ['pendiente', 'en_progreso', 'completada'], default: 'pendiente'},
+    vencida: { type: Boolean, default: false },
     tiempoEstimadoHoras: { type: Number, required: true },
     materiaId: { type: Schema.Types.ObjectId, ref: 'materia', required: true },
     usuarioId: { type: Schema.Types.ObjectId, ref: 'usuario', required: true },
