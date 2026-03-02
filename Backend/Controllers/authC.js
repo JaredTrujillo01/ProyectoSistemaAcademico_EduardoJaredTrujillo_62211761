@@ -2,7 +2,7 @@ const Usuario = require('../Model/UsuarioM');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-function register(req, res) {
+function registro(req, res) {
   const { nombre, apellido, email, password, rol } = req.body;
   Usuario.findOne({ email }).then(async (existe) => {
         if (existe) return res.status(400).json({ message: 'Este correo ya existe' });
@@ -43,4 +43,4 @@ function login(req, res) {
     .catch(err => res.status(500).json({ message: err.message }));
 }
 
-module.exports = { register, login };
+module.exports = { registro, login };
