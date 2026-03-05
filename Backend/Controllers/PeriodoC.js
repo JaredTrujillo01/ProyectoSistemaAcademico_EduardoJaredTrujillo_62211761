@@ -1,21 +1,22 @@
-const periodo = require('../Model/PeriodoM');
+const Periodo = require('../Model/PeriodoM');
 const Materia = require('../Model/MateriasM');
 const Actividad = require('../Model/ActividadesM');
 
 function crearPeriodo(req, res) {
-    const periodo = new periodoM({
-        nombre: req.body.nombre,
-        fechaInicio: req.body.fechaInicio,
-        fechaFin: req.body.fechaFin,
-        usuarioId: req.user.id
-    });
-    periodo.save()
-        .then(data => res.status(201).json(data))
-        .catch(err => res.status(500).json({ message: err.message }));
+  const periodoNuevo = new Periodo({
+    nombre: req.body.nombre,
+    fechaInicio: req.body.fechaInicio,
+    fechaFin: req.body.fechaFin,
+    usuarioId: req.user.id
+  });
+
+  periodoNuevo.save()
+    .then(data => res.status(201).json(data))
+    .catch(err => res.status(500).json({ message: err.message }));
 }
 
 function obtenerPeriodos(req, res) {
-    Periodo.find({ usuarioId: req.user.id }).sort({ fechaInicio: -1 })
+  Periodo.find({ usuarioId: req.user.id }).sort({ fechaInicio: -1 })
     .then(async (periodos) => {
       const hoy = new Date();
 
@@ -49,14 +50,11 @@ function obtenerPeriodos(req, res) {
           }
 
           const progresoPct = totalActividades === 0 ? 0 : Math.round((completadas / totalActividades) * 100);
+
           return {
             ...p.toObject(),
             estadoPeriodo,
-            progresoAcademico: {
-              totalActividades,
-              completadas,
-              progresoPct
-            }
+            progresoAcademico: { totalActividades, completadas, progresoPct }
           };
         })
       );
@@ -67,24 +65,29 @@ function obtenerPeriodos(req, res) {
 }
 
 function actualizarPeriodo(req, res) {
-    const id = req.body.id;
-    periodo.findOneAndUpdate({ _id: id, usuarioId: req.user.id},
-        req.body, { new: true })
-        .then(data => {
-            if (!data) return res.status(404).json({ message: 'Periodo no encontrado' });
-            res.json(data);
-        })
-        .catch(err => res.status(500).json({ message: err.message }));
+  const id = req.body.id;
+
+  Periodo.findOneAndUpdate(
+    { _id: id, usuarioId: req.user.id },
+    req.body,
+    { new: true }
+  )
+    .then(data => {
+      if (!data) return res.status(404).json({ message: 'Periodo no encontrado' });
+      res.json(data);
+    })
+    .catch(err => res.status(500).json({ message: err.message }));
 }
 
 function eliminarPeriodo(req, res) {
-    const id = req.params.id;
-    periodo.findOneAndDelete({ _id: id, usuarioId: req.user.id })
-        .then(data => {
-            if (!data) return res.status(404).json({ message: 'Periodo no encontrado' });
-            res.json({ message: 'Periodo eliminado correctamente' });
-        })
-        .catch(err => res.status(500).json({ message: err.message }));
+  const id = req.params.id;
+
+  Periodo.findOneAndDelete({ _id: id, usuarioId: req.user.id })
+    .then(data => {
+      if (!data) return res.status(404).json({ message: 'Periodo no encontrado' });
+      res.json({ message: 'Periodo eliminado correctamente' });
+    })
+    .catch(err => res.status(500).json({ message: err.message }));
 }
 
 module.exports = { crearPeriodo, obtenerPeriodos, actualizarPeriodo, eliminarPeriodo };
