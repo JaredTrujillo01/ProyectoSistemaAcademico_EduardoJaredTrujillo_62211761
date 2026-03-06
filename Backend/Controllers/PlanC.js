@@ -177,7 +177,6 @@ function obtenerPlan(req, res) {
 
   marcarVencidas(req.user.id)
     .then(() => {
-      // ✅ find + sort + limit (correcto)
       return Plan.find({ usuarioId: req.user.id, periodoId })
         .sort({ fechaGeneracion: -1 })
         .limit(1)

@@ -60,7 +60,6 @@ function guardarDisponibilidad(req, res) {
       }));
 
       const totalSemanal = semanaResp.reduce((acc, x) => acc + Number(x.horaDisponible || 0), 0);
-
       const objetivoSemanal = 40;
       const porcentaje = objetivoSemanal === 0 ? 0 : Math.round((totalSemanal / objetivoSemanal) * 100);
 

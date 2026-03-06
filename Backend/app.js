@@ -15,6 +15,6 @@ app.use('/api/actividades', require('./Routes/ActividadRoutes'));
 app.use('/api/disponibilidad', require('./Routes/DisponibilidadRoutes'));
 app.use('/api/plan', require('./Routes/PlanRoutes'));
 
-app.listen(process.env.PORT || 3000, () => {
-  console.log('Servidor iniciado en puerto ' + (process.env.PORT || 3000));
+app.listen(process.env.PORT, () => {
+  console.log('Servidor iniciado en puerto ' + (process.env.PORT));
 })
