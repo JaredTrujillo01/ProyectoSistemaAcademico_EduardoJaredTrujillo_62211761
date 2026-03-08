@@ -18,6 +18,7 @@ function Login() {
     try {
       const res = await login(email, password);
       localStorage.setItem("token", res.data.token);
+      localStorage.setItem("usuario", JSON.stringify(res.data.usuario));
       navigate("/dashboard");
     } catch (error) {
       alert("Credenciales incorrectas");

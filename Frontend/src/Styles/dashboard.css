@@ -1,0 +1,126 @@
+.dashboard-page {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+}
+
+.dashboard-header h1 {
+  font-size: 22px;
+  margin-bottom: 8px;
+  color: #111827;
+}
+
+.dashboard-header p {
+  color: #6b7280;
+  margin-bottom: 24px;
+}
+
+.calendar-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 20px;
+  min-height: 580px;
+  border: 1px solid #e5e7eb;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.calendar-header h3 {
+  font-size: 20px;
+  color: #111827;
+}
+
+.calendar-header button {
+  background: #e8f0ff;
+  color: #2563eb;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.calendar-placeholder {
+  height: 480px;
+  border-radius: 14px;
+  background: #f9fafb;
+  border: 1px dashed #d1d5db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+}
+
+.dashboard-side {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.smart-card,
+.next-tasks-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+}
+
+.smart-card h3,
+.next-tasks-card h3 {
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+.smart-card p {
+  color: #6b7280;
+  line-height: 1.5;
+  margin-bottom: 18px;
+}
+
+.smart-card button {
+  width: 100%;
+  background: #22c55e;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.next-tasks-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.next-tasks-header span {
+  color: #2563eb;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.task-item {
+  padding: 14px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.task-item:last-child {
+  border-bottom: none;
+}
+
+.task-item strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.task-item p {
+  color: #6b7280;
+  font-size: 14px;
+}
