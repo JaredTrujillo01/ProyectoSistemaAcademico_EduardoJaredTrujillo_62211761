@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { obtenerPeriodos, crearPeriodo } from "../Services/periodoServices";
 import "../Styles/periodos.css";
 
@@ -9,6 +10,8 @@ function Periodos() {
   const [nombre, setNombre] = useState("");
   const [fechaInicio, setFechaInicio] = useState("");
   const [fechaFin, setFechaFin] = useState("");
+
+  const navigate = useNavigate();
 
   const cargarPeriodos = async () => {
     try {
@@ -148,7 +151,12 @@ function Periodos() {
                 </div>
 
                 <div className="periodo-card-footer">
-                  <span className="periodo-link">Ver Materias</span>
+                  <span
+                    className="periodo-link"
+                    onClick={() => navigate(`/materias?periodo=${periodo._id}`)}
+                  >
+                    Ver Materias
+                  </span>
                 </div>
               </div>
             </div>

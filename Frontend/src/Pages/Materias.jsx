@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { FiBookOpen } from "react-icons/fi";
 import { obtenerMaterias, crearMateria } from "../Services/materiaServices";
 import { obtenerPeriodos } from "../Services/periodoServices";
@@ -14,6 +15,9 @@ function Materias() {
   const [periodoId, setPeriodoId] = useState("");
   const [color, setColor] = useState("#3B82F6");
 
+  const [searchParams] = useSearchParams();
+  const periodoSeleccionado = searchParams.get("periodo");
+
   const coloresDisponibles = [
     "#3B82F6",
     "#10B981",
@@ -23,7 +27,6 @@ function Materias() {
     "#F59E0B",
     "#DC2626",
     "#06B6D4",
-
   ];
 
   const cargarDatos = async () => {
@@ -114,6 +117,19 @@ function Materias() {
     }
   };
 
+  useEffect(() => {
+    if (periodoSeleccionado) {
+      const elemento = document.getElementById(`periodo-${periodoSeleccionado}`);
+
+      if (elemento) {
+        elemento.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      }
+    }
+  }, [materiasAgrupadas, periodoSeleccionado]);
+
   return (
     <div className="materias-page">
       <div className="materias-header">
@@ -141,7 +157,11 @@ function Materias() {
       </div>
 
       {materiasAgrupadas.map((grupo) => (
-        <div className="periodo-section" key={grupo._id}>
+        <div
+          className="periodo-section"
+          key={grupo._id}
+          id={`periodo-${grupo._id}`}
+        >
           <div className="periodo-section-header">
             <h2 className="periodo-section-title">{grupo.nombre}</h2>
             <span className={`periodo-section-badge ${obtenerClaseEstado(grupo.estadoPeriodo)}`}>
