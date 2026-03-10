@@ -7,6 +7,6 @@ router.get('/', authMiddleware, actividadC.mostrarActividades);
 router.post('/crear', authMiddleware, actividadC.crearActividad);
 router.post('/editar', authMiddleware, actividadC.editarActividad);
 router.post('/editar-estado', authMiddleware, actividadC.editarEstado);
-router.get('/eliminar', authMiddleware, actividadC.eliminarActividad);
+router.get('/eliminar/:id', authMiddleware, actividadC.eliminarActividad);
 
 module.exports = router;

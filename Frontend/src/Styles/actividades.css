@@ -1,0 +1,383 @@
+.actividades-page {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.actividades-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.actividades-header-left h1 {
+  font-size: 22px;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.actividades-header-left p {
+  color: #6b7280;
+  font-size: 15px;
+}
+
+.actividades-header-left span {
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.btn-crear-actividad {
+  background: #2f80ed;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(47, 128, 237, 0.25);
+}
+
+.actividades-filtros {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 16px 18px;
+  flex-wrap: wrap;
+}
+
+.filtros-left,
+.filtros-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.filtro-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #4b5563;
+  text-transform: uppercase;
+}
+
+.filtro-chip {
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  color: #374151;
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.filtro-chip.active {
+  background: #111827;
+  color: white;
+  border-color: #111827;
+}
+
+.filtro-select {
+  height: 40px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  padding: 0 12px;
+  background: white;
+  font-size: 14px;
+}
+
+.actividades-tabla {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.tabla-header,
+.tabla-row {
+  display: grid;
+  grid-template-columns: 2.4fr 1.2fr 1.2fr 1fr 1.3fr;
+  gap: 16px;
+  align-items: center;
+  padding: 16px 20px;
+}
+
+.tabla-header {
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 13px;
+  font-weight: 700;
+  color: #4b5563;
+  text-transform: uppercase;
+}
+
+.tabla-row {
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.tabla-row:last-child {
+  border-bottom: none;
+}
+
+.actividad-col h4 {
+  font-size: 16px;
+  color: #111827;
+  margin-bottom: 6px;
+}
+
+.actividad-col p {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.materia-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  background: #f3f4f6;
+}
+
+.fecha-texto {
+  font-size: 15px;
+  color: #374151;
+}
+
+.prioridad-badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.prioridad-alta {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.prioridad-media {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.prioridad-baja {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.estado-botones {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.estado-botones button {
+  border: none;
+  background: #f3f4f6;
+  color: #4b5563;
+  padding: 8px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.estado-botones button.activo {
+  background: #2563eb;
+  color: white;
+}
+
+.estado-vencida {
+  display: inline-block;
+  padding: 8px 12px;
+  background: #fee2e2;
+  color: #dc2626;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.actividades-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6b7280;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 20px;
+}
+
+.modal-box {
+  width: 100%;
+  max-width: 560px;
+  background: white;
+  border-radius: 22px;
+  padding: 28px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
+.modal-box h2 {
+  margin-bottom: 22px;
+  color: #111827;
+  font-size: 22px;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modal-form label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.modal-form input,
+.modal-form textarea,
+.modal-form select {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  padding: 12px 14px;
+  outline: none;
+  font-size: 15px;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.modal-form textarea {
+  min-height: 90px;
+  resize: none;
+}
+
+.modal-form input:focus,
+.modal-form textarea:focus,
+.modal-form select:focus {
+  border-color: #2f80ed;
+  box-shadow: 0 0 0 3px rgba(47, 128, 237, 0.12);
+}
+
+.modal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.btn-cancelar {
+  background: #f3f4f6;
+  color: #374151;
+  border: none;
+  border-radius: 12px;
+  padding: 11px 18px;
+  cursor: pointer;
+}
+
+.btn-guardar {
+  background: #2f80ed;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 11px 18px;
+  cursor: pointer;
+}
+
+.filtro-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chip-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.tabla-header,
+.tabla-row {
+  display: grid;
+  grid-template-columns: 2.2fr 1.2fr 1fr 1fr 1.5fr 70px;
+  gap: 16px;
+  align-items: center;
+  padding: 16px 20px;
+}
+
+.estado-botones button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.acciones-col {
+  position: relative;
+}
+
+.menu-acciones-btn {
+  border: none;
+  background: transparent;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  color: #4b5563;
+}
+
+.menu-acciones {
+  position: absolute;
+  top: 32px;
+  right: 0;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+  min-width: 120px;
+  z-index: 20;
+  overflow: hidden;
+}
+
+.menu-acciones button {
+  width: 100%;
+  border: none;
+  background: white;
+  text-align: left;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.menu-acciones button:hover:not(:disabled) {
+  background: #f9fafb;
+}
+
+.menu-acciones button:disabled {
+  color: #9ca3af;
+  cursor: not-allowed;
+}

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FiBookOpen } from "react-icons/fi";
 import { obtenerMaterias, crearMateria } from "../Services/materiaServices";
 import { obtenerPeriodos } from "../Services/periodoServices";
@@ -15,8 +15,7 @@ function Materias() {
   const [periodoId, setPeriodoId] = useState("");
   const [color, setColor] = useState("#3B82F6");
 
-  const [searchParams] = useSearchParams();
-  const periodoSeleccionado = searchParams.get("periodo");
+  const navigate = useNavigate();
 
   const coloresDisponibles = [
     "#3B82F6",
@@ -117,19 +116,6 @@ function Materias() {
     }
   };
 
-  useEffect(() => {
-    if (periodoSeleccionado) {
-      const elemento = document.getElementById(`periodo-${periodoSeleccionado}`);
-
-      if (elemento) {
-        elemento.scrollIntoView({
-          behavior: "smooth",
-          block: "start"
-        });
-      }
-    }
-  }, [materiasAgrupadas, periodoSeleccionado]);
-
   return (
     <div className="materias-page">
       <div className="materias-header">
@@ -137,13 +123,7 @@ function Materias() {
           <h1>Gestión de Materias</h1>
           <p>Organiza y administra tus materias</p>
         </div>
-
-        <button
-          className="btn-crear-materia"
-          onClick={() => setMostrarModal(true)}
-        >
-          + Nueva Materia
-        </button>
+        <button className="btn-crear-materia" onClick={() => setMostrarModal(true)}> + Nueva Materia</button>
       </div>
 
       <div className="materias-resumen">
@@ -172,29 +152,21 @@ function Materias() {
                 : "Por empezar"}
             </span>
           </div>
-
           {grupo.materias.length > 0 ? (
             <div className="materias-grid">
               {grupo.materias.map((materia) => (
                 <div className="materia-card" key={materia._id}>
-                  <div
-                    className="materia-color-bar"
-                    style={{ background: materia.color || "#3B82F6" }}
-                  ></div>
-
+                  <div className="materia-color-bar" style={{ background: materia.color || "#3B82F6" }}></div>
                   <div className="materia-card-content">
                     <span className="materia-code">
                       {materia.nombre.slice(0, 3).toUpperCase()}-{materia.nombre.length}
                     </span>
-
                     <h3 className="materia-title">{materia.nombre}</h3>
                     <p className="materia-desc">{materia.descripcion}</p>
-
                     <div className="materia-progress-row">
                       <span>Progreso</span>
                       <span>{materia.progreso?.progresoPct || 0}%</span>
                     </div>
-
                     <div className="materia-progress-bar">
                       <div
                         className="materia-progress-fill"
@@ -204,12 +176,11 @@ function Materias() {
                         }}
                       ></div>
                     </div>
-
                     <div className="materia-footer">
                       <span>
                         {materia.progreso?.totalActividades || 0} actividades
                       </span>
-                      <span className="materia-link">Ver detalles →</span>
+                      <span className="materia-link" onClick={() => navigate(`/actividades?materia=${materia._id}`)}> Ver actividades → </span>
                     </div>
                   </div>
                 </div>
