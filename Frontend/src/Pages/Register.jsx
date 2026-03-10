@@ -2,6 +2,7 @@ import { useState } from "react";
 import { register } from "../Services/authService";
 import { useNavigate, Link } from "react-router-dom";
 import { FiUser, FiMail, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
+import CustomAlert from "../Components/alert";
 import logo from "../assets/logo.png";
 import "../Styles/auth.css";
 
@@ -14,20 +15,47 @@ function Register() {
   const [password, setPassword] = useState("");
   const [mostrarPassword, setMostrarPassword] = useState(false);
 
+  const [alertaVisible, setAlertaVisible] = useState(false);
+  const [alertaMensaje, setAlertaMensaje] = useState("");
+  const [alertaTipo, setAlertaTipo] = useState("success");
+
+  const mostrarAlerta = (mensaje, tipo = "success") => {
+    setAlertaMensaje(mensaje);
+    setAlertaTipo(tipo);
+    setAlertaVisible(true);
+
+    setTimeout(() => {
+      setAlertaVisible(false);
+    }, 3000);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       await register(nombre, apellido, email, password);
-      alert("Usuario registrado correctamente");
-      navigate("/");
+      mostrarAlerta("Usuario registrado correctamente", "success");
+
+      setTimeout(() => {
+        navigate("/");
+      }, 1200);
     } catch (error) {
-      alert("Error al registrar usuario");
+      mostrarAlerta(
+        error?.response?.data?.message || "Error al registrar usuario",
+        "error"
+      );
     }
   };
 
   return (
     <div className="auth-container">
+      <CustomAlert
+        visible={alertaVisible}
+        message={alertaMensaje}
+        type={alertaTipo}
+        onClose={() => setAlertaVisible(false)}
+      />
+
       <div className="auth-card">
         <div className="auth-logo-box">
           <img src={logo} alt="EduPlanner" className="auth-logo-img" />

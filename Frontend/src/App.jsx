@@ -5,6 +5,7 @@ import Dashboard from "./Pages/Dashboard";
 import Periodos from "./Pages/Periodos";
 import Materias from "./Pages/Materias";
 import Actividades from "./Pages/Actividades";
+import Disponibilidad from "./Pages/Disponibilidad";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import MainLayout from "./Layouts/MainLayout";
 
@@ -19,6 +20,7 @@ function App(){
         <Route path="/periodos" element={<ProtectedRoute><MainLayout><Periodos /></MainLayout></ProtectedRoute>}/>
         <Route path="/materias" element={<ProtectedRoute><MainLayout><Materias /></MainLayout></ProtectedRoute>}/>
         <Route path="/actividades" element={<ProtectedRoute><MainLayout><Actividades/></MainLayout></ProtectedRoute>}/>
+        <Route path="/disponibilidad" element={<ProtectedRoute><MainLayout><Disponibilidad /></MainLayout></ProtectedRoute>}/>
       </Routes>
     </BrowserRouter>
   )
