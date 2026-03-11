@@ -1,0 +1,293 @@
+.plan-page {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.plan-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.plan-header h1 {
+  font-size: 24px;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.plan-header p {
+  color: #6b7280;
+  font-size: 15px;
+}
+
+.btn-generar-plan {
+  background: #2f80ed;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(47, 128, 237, 0.25);
+}
+
+.plan-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.stat-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 20px;
+}
+
+.stat-card small {
+  color: #6b7280;
+  font-size: 14px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.stat-card h3 {
+  font-size: 30px;
+  color: #111827;
+}
+
+.plan-filtros {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.chip-filtro {
+  border: 1px solid #e5e7eb;
+  background: white;
+  color: #374151;
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-size: 14px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chip-filtro.active {
+  background: #111827;
+  color: white;
+  border-color: #111827;
+}
+
+.chip-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.plan-dias {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.dia-header h2 {
+  font-size: 24px;
+  color: #111827;
+  text-transform: capitalize;
+  margin-bottom: 4px;
+}
+
+.bloques-dia {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bloque-estudio {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 16px 18px;
+  display: grid;
+  grid-template-columns: 90px 1fr 130px;
+  gap: 18px;
+  align-items: center;
+}
+
+.bloque-hora {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.bloque-hora strong {
+  font-size: 18px;
+  color: #111827;
+}
+
+.bloque-hora span {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.bloque-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.bloque-materia {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  background: #f9fafb;
+}
+
+.bloque-horas {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.bloque-info h3 {
+  font-size: 18px;
+  color: #111827;
+  margin-bottom: 6px;
+}
+
+.bloque-info p {
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.bloque-estado {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.checkbox-plan {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #374151;
+  font-size: 14px;
+}
+
+.plan-empty {
+  background: white;
+  border: 1px dashed #cbd5e1;
+  border-radius: 18px;
+  padding: 36px 20px;
+  text-align: center;
+  color: #6b7280;
+}
+
+.dia-plan {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.dia-plan-completado .dia-header h2 {
+  color: #15803d;
+}
+
+.dia-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 18px;
+}
+
+.dia-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dia-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.meta-vencidas {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.dia-progreso-box {
+  min-width: 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-end;
+}
+
+.dia-progreso-box span {
+  font-size: 13px;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.dia-progreso-barra {
+  width: 160px;
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.dia-progreso-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  border-radius: 999px;
+}
+
+.bloque-completado {
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+}
+
+.bloque-vencido {
+  border-color: #fecaca;
+  background: #fef2f2;
+}
+
+.bloque-estado-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.badge-completada {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.badge-vencida {
+  background: #fee2e2;
+  color: #dc2626;
+}
