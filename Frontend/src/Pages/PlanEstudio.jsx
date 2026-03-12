@@ -28,6 +28,21 @@ function PlanEstudio() {
     }, 3000);
   };
 
+  const formatearHoras = (horasDecimal) => {
+    const horas = Number(horasDecimal || 0);
+
+    if (horas <= 0) return "0 min";
+
+    const totalMinutos = Math.round(horas * 60);
+    const h = Math.floor(totalMinutos / 60);
+    const m = totalMinutos % 60;
+
+    if (h === 0) return `${m} min`;
+    if (m === 0) return `${h} h`;
+
+    return `${h} h ${m} min`;
+  };
+
   const cargarDatos = async () => {
     try {
       setCargando(true);
@@ -140,12 +155,12 @@ function PlanEstudio() {
     const totalBloques = todosLosBloques.length;
 
     const promedioDiario =
-      plan?.dias?.length > 0 ? (horasTotales / plan.dias.length).toFixed(1) : 0;
+      plan?.dias?.length > 0 ? (horasTotales / plan.dias.length) : 0;
 
     const materiasActivas = materiasPeriodoActual.length;
 
     return {
-      horasTotales: Number(horasTotales.toFixed(1)),
+      horasTotales,
       completadas,
       totalBloques,
       promedioDiario,
@@ -197,7 +212,7 @@ function PlanEstudio() {
       <div className="plan-stats">
         <div className="stat-card">
           <small>Horas Totales</small>
-          <h3>{resumen.horasTotales}h</h3>
+          <h3>{formatearHoras(resumen.horasTotales)}</h3>
         </div>
 
         <div className="stat-card">
@@ -207,7 +222,7 @@ function PlanEstudio() {
 
         <div className="stat-card">
           <small>Promedio Diario</small>
-          <h3>{resumen.promedioDiario}h</h3>
+          <h3>{formatearHoras(resumen.promedioDiario)}</h3>
         </div>
 
         <div className="stat-card">
@@ -304,7 +319,7 @@ function PlanEstudio() {
                         </span>
 
                         <span className="bloque-horas">
-                          {bloque.horasAsignadas} horas
+                          Duración {formatearHoras(bloque.horasAsignadas)}
                         </span>
 
                         {bloque.estado === "vencida" && (

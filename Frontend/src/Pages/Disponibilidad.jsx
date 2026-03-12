@@ -37,6 +37,21 @@ function Disponibilidad() {
     }, 3000);
   };
 
+  const formatearHoras = (horasDecimal) => {
+    const horas = Number(horasDecimal || 0);
+
+    if (horas <= 0) return "0 min";
+
+    const totalMinutos = Math.round(horas * 60);
+    const h = Math.floor(totalMinutos / 60);
+    const m = totalMinutos % 60;
+
+    if (h === 0) return `${m} min`;
+    if (m === 0) return `${h} h`;
+
+    return `${h} h ${m} min`;
+  };
+
   const cargarDisponibilidad = async () => {
     try {
       const res = await obtenerDisponibilidad();
@@ -245,13 +260,14 @@ function Disponibilidad() {
                     />
                   </div>
                 </div>
+
                 <div className="dia-total">
-                  <span>{dia.horaDisponible}</span>
-                  <small>h</small>
+                  <span>{formatearHoras(dia.horaDisponible)}</span>
                 </div>
               </div>
             ))}
           </div>
+
           <div className="config-actions">
             <button className="btn-cancelar-dispo" onClick={limpiarSemana}>
               Limpiar
@@ -261,14 +277,17 @@ function Disponibilidad() {
             </button>
           </div>
         </div>
+
         <div className="resumen-side">
           <div className="resumen-card resumen-principal">
             <small>Total Semanal</small>
-            <h3>{resumenCalculado.totalSemanal} horas</h3>
+            <h3>{formatearHoras(resumenCalculado.totalSemanal)}</h3>
+
             <div className="resumen-meta">
-              <span>Objetivo: {resumenCalculado.objetivoSemanal}h</span>
+              <span>Objetivo: {formatearHoras(resumenCalculado.objetivoSemanal)}</span>
               <span>{resumenCalculado.porcentaje}%</span>
             </div>
+
             <div className="resumen-barra">
               <div
                 className="resumen-fill"
@@ -276,6 +295,7 @@ function Disponibilidad() {
               ></div>
             </div>
           </div>
+
           <div className="resumen-card distribucion-card">
             <h4>Distribución Diaria</h4>
             <div className="mini-bars">
@@ -294,6 +314,7 @@ function Disponibilidad() {
               ))}
             </div>
           </div>
+
           <div className="resumen-card tip-card">
             <h4>Tip para ti</h4>
             <p>{tipTexto}</p>

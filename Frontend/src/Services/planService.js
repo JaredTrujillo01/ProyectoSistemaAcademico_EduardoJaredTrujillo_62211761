@@ -7,3 +7,7 @@ export const generarPlan = (periodoId) => {
 export const obtenerPlan = (periodoId) => {
   return api.get(`/plan/periodo/${periodoId}`);
 };
+
+export const obtenerCalendarioPlan = (from, to, periodoId) => {
+  return api.get(`/plan/calendario?from=${from}&to=${to}&periodoId=${periodoId}`);
+};

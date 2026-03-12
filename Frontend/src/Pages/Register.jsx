@@ -3,7 +3,7 @@ import { register } from "../Services/authService";
 import { useNavigate, Link } from "react-router-dom";
 import { FiUser, FiMail, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
 import CustomAlert from "../Components/alert";
-import logo from "../assets/logo.png";
+import logo from "../assets/Logo.png";
 import "../Styles/auth.css";
 
 function Register() {

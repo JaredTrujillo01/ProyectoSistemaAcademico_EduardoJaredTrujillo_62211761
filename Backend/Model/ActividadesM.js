@@ -5,8 +5,13 @@ const actividadSchema = new Schema({
     titulo: { type: String, required: true },
     descripcion: { type: String },
     fechaEntrega: { type: Date, required: true },
+    tipoActividad: {
+        type: String,
+        enum: ['tarea', 'proyecto', 'quiz', 'examen'],
+        default: 'tarea'
+    },
     prioridad: { type: String, enum: ['baja', 'media', 'alta'], required: true },
-    estado: { type: String, enum: ['pendiente', 'en_progreso', 'completada', 'vencida'], default: 'pendiente'},
+    estado: { type: String, enum: ['pendiente', 'en_progreso', 'completada', 'vencida'], default: 'pendiente' },
     tiempoEstimadoHoras: { type: Number, required: true },
     materiaId: { type: Schema.Types.ObjectId, ref: 'materia', required: true },
     usuarioId: { type: Schema.Types.ObjectId, ref: 'usuario', required: true },

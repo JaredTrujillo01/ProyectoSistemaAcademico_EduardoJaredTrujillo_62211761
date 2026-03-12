@@ -1,0 +1,146 @@
+.detalle-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.detalle-modal-card {
+  width: 100%;
+  max-width: 760px;
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.18);
+  position: relative;
+  overflow: hidden;
+}
+
+.detalle-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 38px;
+  height: 38px;
+  border: 1px solid #d1d5db;
+  background: white;
+  border-radius: 12px;
+  font-size: 24px;
+  cursor: pointer;
+  line-height: 1;
+  color: #111827;
+}
+
+.detalle-modal-header {
+  padding: 28px 26px 20px;
+  border-bottom: 1px solid #eef2f7;
+}
+
+.detalle-modal-header small {
+  color: #6b7280;
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.detalle-modal-header h2 {
+  font-size: 30px;
+  color: #0f172a;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.titulo-completado {
+  text-decoration: line-through;
+  opacity: 0.75;
+}
+
+.detalle-modal-body {
+  padding: 24px 26px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.detalle-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 28px;
+}
+
+.detalle-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.detalle-item strong,
+.detalle-descripcion strong {
+  color: #111827;
+  font-size: 15px;
+}
+
+.detalle-item span {
+  color: #374151;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.detalle-materia-badge {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid;
+  border-radius: 999px;
+  padding: 7px 12px;
+  width: fit-content;
+  font-weight: 600;
+  background: #f9fafb;
+}
+
+.detalle-badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.estado-pendiente {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.estado-en_progreso {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.estado-completada {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.estado-vencida {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.detalle-descripcion {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+.detalle-descripcion p {
+  color: #374151;
+  line-height: 1.7;
+  font-size: 16px;
+  margin: 0;
+}

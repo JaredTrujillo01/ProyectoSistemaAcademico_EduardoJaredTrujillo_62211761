@@ -86,7 +86,7 @@
 
 .dia-horas {
   display: flex;
-  gap: 10px;
+  gap: 15px;
   align-items: end;
 }
 
@@ -112,11 +112,11 @@
 }
 
 .dia-total {
+  white-space: nowrap;
   display: flex;
-  align-items: baseline;
-  gap: 4px;
-  min-width: 52px;
-  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
 }
 
 .dia-total span {

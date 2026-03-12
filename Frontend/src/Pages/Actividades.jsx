@@ -1,6 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import {obtenerActividades, crearActividad, editarEstadoActividad, editarActividad, eliminarActividad
+import {
+  obtenerActividades,
+  crearActividad,
+  editarEstadoActividad,
+  editarActividad,
+  eliminarActividad
 } from "../Services/actividadesService";
 import { obtenerMaterias } from "../Services/materiaServices";
 import { obtenerPeriodos } from "../Services/periodoServices";
@@ -22,6 +27,7 @@ function Actividades() {
   const [titulo, setTitulo] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [fechaEntrega, setFechaEntrega] = useState("");
+  const [tipoActividad, setTipoActividad] = useState("tarea");
   const [prioridad, setPrioridad] = useState("media");
   const [tiempoEstimadoHoras, setTiempoEstimadoHoras] = useState("");
   const [materiaId, setMateriaId] = useState("");
@@ -71,8 +77,22 @@ function Actividades() {
     ).length;
   }, [actividades]);
 
-  const obtenerMateria = (id) => {
-    return materias.find((m) => String(m._id) === String(id));
+  const obtenerMateria = (materiaRef) => {
+    if (!materiaRef) return null;
+
+    if (typeof materiaRef === "object" && materiaRef._id) {
+      return materiaRef;
+    }
+
+    return materias.find((m) => String(m._id) === String(materiaRef)) || null;
+  };
+
+  const obtenerMateriaIdReal = (materiaRef) => {
+    if (!materiaRef) return "";
+    if (typeof materiaRef === "object" && materiaRef._id) {
+      return materiaRef._id;
+    }
+    return materiaRef;
   };
 
   const obtenerPeriodoDeActividad = (actividad) => {
@@ -85,7 +105,10 @@ function Actividades() {
     let lista = [...actividades];
 
     if (materiaFiltro) {
-      lista = lista.filter((a) => String(a.materiaId) === String(materiaFiltro));
+      lista = lista.filter((a) => {
+        const materiaIdReal = obtenerMateriaIdReal(a.materiaId);
+        return String(materiaIdReal) === String(materiaFiltro);
+      });
     }
 
     if (prioridadFiltro !== "todas") {
@@ -168,6 +191,7 @@ function Actividades() {
     setTitulo("");
     setDescripcion("");
     setFechaEntrega("");
+    setTipoActividad("tarea");
     setPrioridad("media");
     setTiempoEstimadoHoras("");
     setMateriaId("");
@@ -185,6 +209,7 @@ function Actividades() {
           titulo,
           descripcion,
           fechaEntrega,
+          tipoActividad,
           prioridad,
           tiempoEstimadoHoras,
           materiaId
@@ -194,6 +219,7 @@ function Actividades() {
           titulo,
           descripcion,
           fechaEntrega,
+          tipoActividad,
           prioridad,
           tiempoEstimadoHoras,
           materiaId
@@ -240,9 +266,10 @@ function Actividades() {
     setTitulo(actividad.titulo);
     setDescripcion(actividad.descripcion || "");
     setFechaEntrega(actividad.fechaEntrega?.slice(0, 10));
+    setTipoActividad(actividad.tipoActividad || "tarea");
     setPrioridad(actividad.prioridad);
     setTiempoEstimadoHoras(actividad.tiempoEstimadoHoras);
-    setMateriaId(actividad.materiaId);
+    setMateriaId(obtenerMateriaIdReal(actividad.materiaId));
     setMostrarModal(true);
     setMenuAbierto(null);
   };
@@ -504,6 +531,21 @@ function Actividades() {
                 </div>
 
                 <div>
+                  <label>Tipo de actividad</label>
+                  <select
+                    value={tipoActividad}
+                    onChange={(e) => setTipoActividad(e.target.value)}
+                  >
+                    <option value="tarea">Tarea</option>
+                    <option value="proyecto">Proyecto</option>
+                    <option value="quiz">Quiz</option>
+                    <option value="examen">Examen</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="modal-grid">
+                <div>
                   <label>Prioridad</label>
                   <select
                     value={prioridad}
@@ -514,18 +556,18 @@ function Actividades() {
                     <option value="baja">Baja</option>
                   </select>
                 </div>
-              </div>
 
-              <div>
-                <label>Tiempo estimado (horas)</label>
-                <input
-                  type="number"
-                  min="1"
-                  placeholder="Ej: 3"
-                  value={tiempoEstimadoHoras}
-                  onChange={(e) => setTiempoEstimadoHoras(e.target.value)}
-                  required
-                />
+                <div>
+                  <label>Tiempo estimado (horas)</label>
+                  <input
+                    type="number"
+                    min="1"
+                    placeholder="Ej: 3"
+                    value={tiempoEstimadoHoras}
+                    onChange={(e) => setTiempoEstimadoHoras(e.target.value)}
+                    required
+                  />
+                </div>
               </div>
 
               <div className="modal-actions">

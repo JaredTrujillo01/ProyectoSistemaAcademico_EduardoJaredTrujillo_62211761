@@ -1,10 +1,16 @@
 const actividadM = require('../Model/ActividadesM');
 
+function parseDateOnlyLocal(dateStr) {
+    const [y, m, d] = dateStr.split('-').map(Number);
+    return new Date(y, m - 1, d, 12, 0, 0, 0);
+}
+
 function crearActividad(req, res) {
     const actividad = new actividadM({
         titulo: req.body.titulo,
         descripcion: req.body.descripcion,
-        fechaEntrega: req.body.fechaEntrega,
+        fechaEntrega: parseDateOnlyLocal(req.body.fechaEntrega),
+        tipoActividad: req.body.tipoActividad || 'tarea',
         prioridad: req.body.prioridad,
         estado: 'pendiente',
         tiempoEstimadoHoras: req.body.tiempoEstimadoHoras,
@@ -40,7 +46,10 @@ function mostrarActividades(req, res) {
                 filtro.materiaId = req.query.materiaId;
             }
 
-            return actividadM.find(filtro).sort({ fechaEntrega: 1 });
+            return actividadM
+                .find(filtro)
+                .sort({ fechaEntrega: 1 })
+                .populate('materiaId');
         })
         .then(data => res.json(data))
         .catch(err => res.status(500).json({ message: err.message }));
@@ -48,6 +57,14 @@ function mostrarActividades(req, res) {
 
 function editarActividad(req, res) {
     const id = req.body.id;
+
+    if (req.body.fechaEntrega) {
+        req.body.fechaEntrega = parseDateOnlyLocal(req.body.fechaEntrega);
+    }
+
+    if (!req.body.tipoActividad) {
+        req.body.tipoActividad = 'tarea';
+    }
 
     actividadM.findOne({ _id: id, usuarioId: req.user.id })
         .then((actividad) => {
@@ -114,4 +131,5 @@ function eliminarActividad(req, res) {
         .catch(err => res.status(500).json({ message: err.message }));
 }
 
-module.exports = {crearActividad, mostrarActividades, editarActividad, editarEstado, eliminarActividad};
+module.exports = { crearActividad, mostrarActividades, editarActividad, editarEstado, eliminarActividad
+};

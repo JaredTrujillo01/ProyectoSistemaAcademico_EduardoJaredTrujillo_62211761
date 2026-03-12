@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {FiHome, FiCalendar, FiBookOpen, FiCheckCircle, FiClock, FiClipboard, FiLogOut } from "react-icons/fi";
-import logo from "../assets/logo.png";
+import logo from "../assets/Logo.png";
 import "../Styles/layout.css";
 
 function Sidebar(){
