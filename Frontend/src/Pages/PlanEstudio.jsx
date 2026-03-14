@@ -14,6 +14,8 @@ function PlanEstudio() {
   const [cargando, setCargando] = useState(true);
   const [generando, setGenerando] = useState(false);
 
+  const [checksVisuales, setChecksVisuales] = useState({});
+
   const [alertaVisible, setAlertaVisible] = useState(false);
   const [alertaMensaje, setAlertaMensaje] = useState("");
   const [alertaTipo, setAlertaTipo] = useState("success");
@@ -26,6 +28,26 @@ function PlanEstudio() {
     setTimeout(() => {
       setAlertaVisible(false);
     }, 3000);
+  };
+
+  const getBloqueKey = (diaFecha, bloque, index) => {
+    return `${diaFecha}-${bloque.actividadId || bloque.titulo}-${bloque.horaInicio}-${bloque.horaFin}-${index}`;
+  };
+
+  const estaBloqueCompletado = (diaFecha, bloque, index) => {
+    if (bloque.estado === "completada") return true;
+    return !!checksVisuales[getBloqueKey(diaFecha, bloque, index)];
+  };
+
+  const toggleCheckVisual = (diaFecha, bloque, index) => {
+    if (bloque.estado === "completada" || bloque.estado === "vencida") return;
+
+    const key = getBloqueKey(diaFecha, bloque, index);
+
+    setChecksVisuales((prev) => ({
+      ...prev,
+      [key]: !prev[key]
+    }));
   };
 
   const formatearHoras = (horasDecimal) => {
@@ -87,6 +109,7 @@ function PlanEstudio() {
       await generarPlan(periodoActual._id);
       const resPlan = await obtenerPlan(periodoActual._id);
       setPlan(resPlan.data);
+      setChecksVisuales({});
       mostrarAlerta("Plan de estudio generado correctamente", "success");
     } catch (error) {
       console.error(error);
@@ -122,7 +145,11 @@ function PlanEstudio() {
 
     return diasBase.map((dia) => {
       const totalBloques = dia.bloques.length;
-      const completadas = dia.bloques.filter((b) => b.estado === "completada").length;
+
+      const completadas = dia.bloques.filter((bloque, index) =>
+        estaBloqueCompletado(dia.fecha, bloque, index)
+      ).length;
+
       const vencidas = dia.bloques.filter((b) => b.estado === "vencida").length;
       const porcentaje = totalBloques === 0 ? 0 : Math.round((completadas / totalBloques) * 100);
       const diaCompletado = totalBloques > 0 && completadas === totalBloques;
@@ -138,22 +165,27 @@ function PlanEstudio() {
         }
       };
     });
-  }, [plan, materiaFiltro]);
+  }, [plan, materiaFiltro, checksVisuales]);
 
   const resumen = useMemo(() => {
-    const todosLosBloques = plan?.dias?.flatMap((d) => d.bloques) || [];
+    const todosLosDias = plan?.dias || [];
+    const todosLosBloques = todosLosDias.flatMap((d) => d.bloques) || [];
 
     const horasTotales = todosLosBloques.reduce(
       (acc, bloque) => acc + Number(bloque.horasAsignadas || 0),
       0
     );
 
-    const completadas = todosLosBloques.filter(
-      (bloque) => bloque.estado === "completada"
-    ).length;
+    let completadas = 0;
+    todosLosDias.forEach((dia) => {
+      dia.bloques.forEach((bloque, index) => {
+        if (estaBloqueCompletado(dia.fecha, bloque, index)) {
+          completadas += 1;
+        }
+      });
+    });
 
     const totalBloques = todosLosBloques.length;
-
     const promedioDiario =
       plan?.dias?.length > 0 ? (horasTotales / plan.dias.length) : 0;
 
@@ -166,7 +198,7 @@ function PlanEstudio() {
       promedioDiario,
       materiasActivas
     };
-  }, [plan, materiasPeriodoActual]);
+  }, [plan, materiasPeriodoActual, checksVisuales]);
 
   const formatearFecha = (fecha) => {
     const date = new Date(fecha + "T00:00:00");
@@ -290,63 +322,68 @@ function PlanEstudio() {
               </div>
 
               <div className="bloques-dia">
-                {dia.bloques.map((bloque, index) => (
-                  <div
-                    className={`bloque-estudio ${
-                      bloque.estado === "completada"
-                        ? "bloque-completado"
-                        : bloque.estado === "vencida"
-                        ? "bloque-vencido"
-                        : ""
-                    }`}
-                    key={`${dia.fecha}-${index}`}
-                  >
-                    <div className="bloque-hora">
-                      <strong>{bloque.horaInicio}</strong>
-                      <span>{bloque.horaFin}</span>
-                    </div>
+                {dia.bloques.map((bloque, index) => {
+                  const completadoVisual = estaBloqueCompletado(dia.fecha, bloque, index);
 
-                    <div className="bloque-info">
-                      <div className="bloque-top">
-                        <span
-                          className="bloque-materia"
-                          style={{
-                            color: bloque.materia?.color || "#2563eb",
-                            borderColor: `${bloque.materia?.color || "#2563eb"}33`
-                          }}
-                        >
-                          {bloque.materia?.nombre || "Materia"}
-                        </span>
-
-                        <span className="bloque-horas">
-                          Duración {formatearHoras(bloque.horasAsignadas)}
-                        </span>
-
-                        {bloque.estado === "vencida" && (
-                          <span className="bloque-estado-badge badge-vencida">Vencida</span>
-                        )}
-
-                        {bloque.estado === "completada" && (
-                          <span className="bloque-estado-badge badge-completada">Completada</span>
-                        )}
+                  return (
+                    <div
+                      className={`bloque-estudio ${
+                        completadoVisual
+                          ? "bloque-completado"
+                          : bloque.estado === "vencida"
+                          ? "bloque-vencido"
+                          : ""
+                      }`}
+                      key={`${dia.fecha}-${index}`}
+                    >
+                      <div className="bloque-hora">
+                        <strong>{bloque.horaInicio}</strong>
+                        <span>{bloque.horaFin}</span>
                       </div>
 
-                      <h3>{bloque.titulo}</h3>
-                      <p>{bloque.descripcion}</p>
-                    </div>
+                      <div className="bloque-info">
+                        <div className="bloque-top">
+                          <span
+                            className="bloque-materia"
+                            style={{
+                              color: bloque.materia?.color || "#2563eb",
+                              borderColor: `${bloque.materia?.color || "#2563eb"}33`
+                            }}
+                          >
+                            {bloque.materia?.nombre || "Materia"}
+                          </span>
 
-                    <div className="bloque-estado">
-                      <label className="checkbox-plan">
-                        <input
-                          type="checkbox"
-                          checked={bloque.estado === "completada"}
-                          readOnly
-                        />
-                        <span>Completado</span>
-                      </label>
+                          <span className="bloque-horas">
+                            Duración {formatearHoras(bloque.horasAsignadas)}
+                          </span>
+
+                          {bloque.estado === "vencida" && (
+                            <span className="bloque-estado-badge badge-vencida">Vencida</span>
+                          )}
+
+                          {completadoVisual && (
+                            <span className="bloque-estado-badge badge-completada">Completada</span>
+                          )}
+                        </div>
+
+                        <h3>{bloque.titulo}</h3>
+                        <p>{bloque.descripcion}</p>
+                      </div>
+
+                      <div className="bloque-estado">
+                        <label className="checkbox-plan">
+                          <input
+                            type="checkbox"
+                            checked={completadoVisual}
+                            disabled={bloque.estado === "vencida"}
+                            onChange={() => toggleCheckVisual(dia.fecha, bloque, index)}
+                          />
+                          <span>Completado</span>
+                        </label>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           ))}

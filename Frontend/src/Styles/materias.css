@@ -111,7 +111,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 260px));
   gap: 22px;
-  justify-content: start;
+  align-items: stretch;
 }
 
 .materia-card {
@@ -121,6 +121,8 @@
   overflow: hidden;
   position: relative;
   box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  display: flex;
+  min-height: 310px;
 }
 
 .materia-color-bar {
@@ -133,6 +135,9 @@
 
 .materia-card-content {
   padding: 18px 18px 16px 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .materia-code {
@@ -157,7 +162,10 @@
   color: #6b7280;
   font-size: 14px;
   margin-bottom: 18px;
-  min-height: 40px;
+}
+
+.materia-content-spacer {
+  flex: 1;
 }
 
 .materia-progress-row {
@@ -189,6 +197,7 @@
   color: #6b7280;
   font-size: 13px;
   gap: 10px;
+  margin-top: 16px;
 }
 
 .materia-link {
@@ -207,7 +216,6 @@
   color: #6b7280;
 }
 
-/* Modal */
 .modal-overlay {
   position: fixed;
   inset: 0;

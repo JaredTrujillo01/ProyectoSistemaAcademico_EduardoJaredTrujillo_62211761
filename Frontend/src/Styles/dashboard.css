@@ -141,7 +141,7 @@
 }
 
 .dia-mes {
-  min-height: 120px;
+  height: 150px;
   border: 1px solid #eef2f7;
   border-radius: 16px;
   padding: 10px;
@@ -149,6 +149,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  overflow: hidden;
 }
 
 .dia-mes.fuera-mes {
@@ -170,6 +171,8 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  flex: 1;
+  overflow: hidden;
 }
 
 .evento-calendario,
@@ -200,6 +203,13 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.evento-mas {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  padding: 2px 4px;
 }
 
 .calendario-semana {

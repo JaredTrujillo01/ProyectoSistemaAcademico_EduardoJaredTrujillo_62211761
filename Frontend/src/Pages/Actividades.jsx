@@ -151,8 +151,8 @@ function Actividades() {
     }
 
     const prioridadEstadoActividad = {
-      pendiente: 1,
-      en_progreso: 2,
+      en_progreso: 1,
+      pendiente: 2,
       completada: 3,
       vencida: 4
     };
@@ -479,10 +479,10 @@ function Actividades() {
 
       {mostrarModal && (
         <div className="modal-overlay">
-          <div className="modal-box">
+          <div className="modal-box actividad-modal-box">
             <h2>{modoEditar ? "Editar actividad" : "Nueva actividad"}</h2>
 
-            <form className="modal-form" onSubmit={handleCrearActividad}>
+            <form className="modal-form actividad-modal-form" onSubmit={handleCrearActividad}>
               <div>
                 <label>Título</label>
                 <input
@@ -519,7 +519,7 @@ function Actividades() {
                 </select>
               </div>
 
-              <div className="modal-grid">
+              <div className="modal-grid actividad-modal-grid">
                 <div>
                   <label>Fecha límite</label>
                   <input
@@ -544,7 +544,7 @@ function Actividades() {
                 </div>
               </div>
 
-              <div className="modal-grid">
+              <div className="modal-grid actividad-modal-grid">
                 <div>
                   <label>Prioridad</label>
                   <select
@@ -570,7 +570,7 @@ function Actividades() {
                 </div>
               </div>
 
-              <div className="modal-actions">
+              <div className="modal-actions actividad-modal-actions">
                 <button
                   type="button"
                   className="btn-cancelar"

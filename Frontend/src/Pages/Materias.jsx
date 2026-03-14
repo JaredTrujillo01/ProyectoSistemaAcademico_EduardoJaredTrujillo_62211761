@@ -163,6 +163,7 @@ function Materias() {
                     </span>
                     <h3 className="materia-title">{materia.nombre}</h3>
                     <p className="materia-desc">{materia.descripcion}</p>
+                    <div className="materia-content-spacer"></div>
                     <div className="materia-progress-row">
                       <span>Progreso</span>
                       <span>{materia.progreso?.progresoPct || 0}%</span>

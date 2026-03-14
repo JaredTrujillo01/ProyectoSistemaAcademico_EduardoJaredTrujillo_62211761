@@ -377,32 +377,44 @@ function Dashboard() {
   };
 
   const renderEventosDia = (fechaKey, limite = 3) => {
-    const lista = eventosPorFecha[fechaKey] || [];
+  const lista = eventosPorFecha[fechaKey] || [];
+  const visibles = lista.slice(0, limite);
+  const restantes = lista.length - limite;
 
-    return lista.slice(0, limite).map((evento, idx) => (
-      <div
-        key={`${fechaKey}-${idx}`}
-        className={`evento-calendario ${evento.estado === "completada" ? "evento-completado" : ""}`}
-        style={{
-          background:
-            evento.estado === "completada"
-              ? "#f3f4f6"
-              : `${evento.materia?.color || "#3B82F6"}20`,
-          borderLeft: `4px solid ${evento.materia?.color || "#3B82F6"}`,
-        }}
-        onClick={(e) => {
-          e.stopPropagation();
-          abrirDetalle(evento);
-        }}
-      >
-        <span className="evento-nombre">
-          {evento.tipo === "deadline"
-            ? `Entrega: ${limpiarTituloEntrega(evento.titulo)}`
-            : evento.titulo}
-        </span>
-      </div>
-    ));
-  };
+  return (
+    <>
+      {visibles.map((evento, idx) => (
+        <div
+          key={`${fechaKey}-${idx}`}
+          className={`evento-calendario ${evento.estado === "completada" ? "evento-completado" : ""}`}
+          style={{
+            background:
+              evento.estado === "completada"
+                ? "#f3f4f6"
+                : `${evento.materia?.color || "#3B82F6"}20`,
+            borderLeft: `4px solid ${evento.materia?.color || "#3B82F6"}`,
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            abrirDetalle(evento);
+          }}
+        >
+          <span className="evento-nombre">
+            {evento.tipo === "deadline"
+              ? `Entrega: ${limpiarTituloEntrega(evento.titulo)}`
+              : evento.titulo}
+          </span>
+        </div>
+      ))}
+
+      {restantes > 0 && (
+        <div className="evento-mas">
+          +{restantes} más
+        </div>
+      )}
+    </>
+  );
+};
 
   if (cargando) {
     return <div className="dashboard-page">Cargando dashboard...</div>;
@@ -509,7 +521,7 @@ function Dashboard() {
                       >
                         <div className="dia-numero">{item.fecha.getDate()}</div>
                         <div className="dia-eventos">
-                          {renderEventosDia(key, 2)}
+                          {renderEventosDia(key, 3)}
                         </div>
                       </div>
                     );

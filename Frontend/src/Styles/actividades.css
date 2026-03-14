@@ -381,3 +381,34 @@
   color: #9ca3af;
   cursor: not-allowed;
 }
+
+.actividad-modal-box {
+  max-width: 920px;
+  max-height: 100vh;
+  overflow-y: auto;
+}
+
+.actividad-modal-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.actividad-modal-form > div:nth-child(1),
+.actividad-modal-form > div:nth-child(2),
+.actividad-modal-form > div:nth-child(3) {
+  grid-column: 1 / -1;
+}
+
+.actividad-modal-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.actividad-modal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
