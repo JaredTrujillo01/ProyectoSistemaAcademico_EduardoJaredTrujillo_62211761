@@ -94,7 +94,7 @@
   background: white;
   border: 1px solid #e5e7eb;
   border-radius: 18px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .tabla-header,
@@ -352,14 +352,14 @@
 
 .menu-acciones {
   position: absolute;
-  top: 32px;
+  bottom: 36px;
   right: 0;
   background: white;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   box-shadow: 0 10px 24px rgba(0,0,0,0.08);
   min-width: 120px;
-  z-index: 20;
+  z-index: 50;
   overflow: hidden;
 }
 

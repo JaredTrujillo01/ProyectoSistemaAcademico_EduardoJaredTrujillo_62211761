@@ -7,18 +7,26 @@ function registro(req, res) {
 
   Usuario.findOne({ email })
     .then(async (existe) => {
-      if (existe) return res.status(400).json({ message: 'Este correo ya existe' });
+      if (existe) {
+        return res.status(400).json({ message: 'Este correo ya existe' });
+      }
 
       const salt = await bcrypt.genSalt(10);
       const hash = await bcrypt.hash(password, salt);
+
+      let rolFinal = 'estudiante';
+
+      if (req.user?.rol === 'admin' && ['admin', 'estudiante'].includes(rol)) {
+        rolFinal = rol;
+      }
 
       const nuevo = new Usuario({
         nombre,
         apellido,
         email,
         password: hash,
-        rol: rol || 'estudiante',
-        activo: true,
+        rol: rolFinal,
+        activo: true
       });
 
       nuevo.save()
@@ -29,13 +37,16 @@ function registro(req, res) {
               id: user._id,
               nombre: user.nombre,
               apellido: user.apellido,
-              rol: user.rol
+              email: user.email,
+              rol: user.rol,
+              activo: user.activo,
+              fechaRegistro: user.fechaRegistro
             }
           })
         )
-        .catch(err => res.status(500).json({ message: err.message }));
+        .catch((err) => res.status(500).json({ message: err.message }));
     })
-    .catch(err => res.status(500).json({ message: err.message }));
+    .catch((err) => res.status(500).json({ message: err.message }));
 }
 
 function login(req, res) {
@@ -43,10 +54,14 @@ function login(req, res) {
 
   Usuario.findOne({ email, activo: true })
     .then(async (user) => {
-      if (!user) return res.status(400).json({ message: 'Credenciales inválidas' });
+      if (!user) {
+        return res.status(400).json({ message: 'Credenciales inválidas' });
+      }
 
       const ok = await bcrypt.compare(password, user.password);
-      if (!ok) return res.status(400).json({ message: 'Credenciales inválidas' });
+      if (!ok) {
+        return res.status(400).json({ message: 'Credenciales inválidas' });
+      }
 
       const token = jwt.sign(
         { id: user._id, rol: user.rol },
@@ -61,11 +76,54 @@ function login(req, res) {
           id: user._id,
           nombre: user.nombre,
           apellido: user.apellido,
-          rol: user.rol
+          email: user.email,
+          rol: user.rol,
+          activo: user.activo
         }
       });
     })
-    .catch(err => res.status(500).json({ message: err.message }));
+    .catch((err) => res.status(500).json({ message: err.message }));
 }
 
-module.exports = { registro, login };
+function listarUsuarios(req, res) {
+  Usuario.find({}, { password: 0 })
+    .sort({ fechaRegistro: -1 })
+    .then((usuarios) => res.json(usuarios))
+    .catch((err) => res.status(500).json({ message: err.message }));
+}
+
+function editarUsuario(req, res) {
+  const { id } = req.params;
+  const { nombre, apellido, email, rol, activo } = req.body;
+
+  const camposPermitidos = {};
+
+  if (nombre !== undefined) camposPermitidos.nombre = nombre;
+  if (apellido !== undefined) camposPermitidos.apellido = apellido;
+  if (email !== undefined) camposPermitidos.email = email;
+  if (rol !== undefined) camposPermitidos.rol = rol;
+  if (activo !== undefined) camposPermitidos.activo = activo;
+
+  if (rol !== undefined && !['estudiante', 'admin'].includes(rol)) {
+    return res.status(400).json({ message: 'Rol inválido' });
+  }
+
+  Usuario.findByIdAndUpdate(
+    id,
+    { $set: camposPermitidos },
+    { new: true, runValidators: true, select: '-password' }
+  )
+    .then((usuario) => {
+      if (!usuario) {
+        return res.status(404).json({ message: 'Usuario no encontrado' });
+      }
+
+      res.json({
+        message: 'Usuario actualizado correctamente',
+        usuario
+      });
+    })
+    .catch((err) => res.status(500).json({ message: err.message }));
+}
+
+module.exports = {registro, login, listarUsuarios, editarUsuario};

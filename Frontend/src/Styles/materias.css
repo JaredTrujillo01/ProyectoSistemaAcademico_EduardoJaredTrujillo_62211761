@@ -120,7 +120,7 @@
   border-radius: 18px;
   overflow: hidden;
   position: relative;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
   display: flex;
   min-height: 310px;
 }
@@ -140,15 +140,63 @@
   flex: 1;
 }
 
+.materia-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
 .materia-code {
   display: inline-block;
   font-size: 11px;
   font-weight: 700;
   padding: 6px 10px;
   border-radius: 999px;
-  margin-bottom: 14px;
   background: #f3f4f6;
   color: #374151;
+}
+
+.materia-actions {
+  position: relative;
+}
+
+.materia-menu-btn {
+  border: none;
+  background: transparent;
+  color: #4b5563;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.materia-menu {
+  position: absolute;
+  top: 28px;
+  right: 0;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+  min-width: 120px;
+  z-index: 20;
+  overflow: hidden;
+}
+
+.materia-menu button {
+  width: 100%;
+  border: none;
+  background: white;
+  text-align: left;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #374151;
+}
+
+.materia-menu button:hover {
+  background: #f9fafb;
 }
 
 .materia-title {
@@ -248,18 +296,10 @@
   gap: 16px;
 }
 
-.modal-form div {
+.modal-form > div {
   display: flex;
   flex-direction: column;
   gap: 8px;
-}
-
-.modal-form .color-options {
-  display: flex;
-  flex-direction: row !important;
-  gap: 12px;
-  align-items: center;
-  flex-wrap: wrap;
 }
 
 .modal-form label {
@@ -294,11 +334,12 @@
 }
 
 .color-options {
-  display: flex;
-  flex-direction: row;
-  gap: 12px;
+  display: flex !important;
+  flex-direction: row !important;
   align-items: center;
+  gap: 12px;
   margin-top: 6px;
+  flex-wrap: wrap;
 }
 
 .color-circle {

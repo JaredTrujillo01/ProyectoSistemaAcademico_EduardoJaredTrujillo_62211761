@@ -19,6 +19,16 @@ function Navbar() {
         return "Disponibilidad";
       case "/plan-estudio":
         return "Plan de Estudio";
+      case "/admin/dashboard":
+        return "Panel de Administración";
+      case "/admin/usuarios":
+        return "Gestión de Usuarios";
+      case "/admin/periodos":
+        return "Períodos";
+      case "/admin/materias":
+        return "Materias";
+      case "/admin/actividades":
+        return "Actividades";
       default:
         return "Inicio";
     }
@@ -35,12 +45,15 @@ function Navbar() {
       <div className="navbar-right">
         <div className="navbar-user">
           <div className="navbar-user-info">
-            <strong>{usuario?.nombre} {usuario?.apellido}</strong>
+            <strong>
+              {usuario?.nombre} {usuario?.apellido}
+            </strong>
             <p>{usuario?.rol}</p>
           </div>
 
           <div className="user-avatar">
-            {usuario?.nombre?.charAt(0)}{usuario?.apellido?.charAt(0)}
+            {usuario?.nombre?.charAt(0)}
+            {usuario?.apellido?.charAt(0)}
           </div>
         </div>
       </div>

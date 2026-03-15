@@ -149,3 +149,27 @@ body {
   text-decoration: none;
   font-weight: 600;
 }
+
+.auth-message {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 6px 0 14px;
+  box-sizing: border-box;
+}
+
+.auth-message-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+}
+
+.auth-message-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}

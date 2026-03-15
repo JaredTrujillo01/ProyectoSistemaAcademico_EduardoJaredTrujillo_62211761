@@ -20,3 +20,7 @@ export const editarActividad = (data) => {
 export const eliminarActividad = (id) => {
   return api.delete(`/actividades/eliminar/${id}`);
 };
+
+export const obtenerActividadesAdmin = () => {
+  return api.get("/actividades/admin/listar");
+};

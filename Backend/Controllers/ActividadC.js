@@ -1,4 +1,5 @@
 const actividadM = require('../Model/ActividadesM');
+const Usuario = require('../Model/UsuarioM');
 
 function parseDateOnlyLocal(dateStr) {
     const [y, m, d] = dateStr.split('-').map(Number);
@@ -131,5 +132,40 @@ function eliminarActividad(req, res) {
         .catch(err => res.status(500).json({ message: err.message }));
 }
 
-module.exports = { crearActividad, mostrarActividades, editarActividad, editarEstado, eliminarActividad
-};
+function obtenerActividadesAdmin(req, res) {
+    marcarVencidas(req.user.id)
+        .then(() => {
+            return actividadM
+                .find({})
+                .sort({ fechaEntrega: 1 })
+                .populate('materiaId');
+        })
+        .then(async (actividades) => {
+            const actividadesConDatos = await Promise.all(
+                actividades.map(async (actividad) => {
+                    const usuario = await Usuario.findById(actividad.usuarioId, {
+                        nombre: 1,
+                        apellido: 1,
+                        email: 1
+                    });
+
+                    return {
+                        ...actividad.toObject(),
+                        usuario: usuario
+                            ? {
+                                id: usuario._id,
+                                nombre: usuario.nombre,
+                                apellido: usuario.apellido,
+                                email: usuario.email
+                            }
+                            : null
+                    };
+                })
+            );
+
+            res.json(actividadesConDatos);
+        })
+        .catch(err => res.status(500).json({ message: err.message }));
+}
+
+module.exports = { crearActividad, mostrarActividades, editarActividad, editarEstado, eliminarActividad, obtenerActividadesAdmin};

@@ -1,17 +1,44 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { obtenerPeriodos, crearPeriodo } from "../Services/periodoServices";
+import {
+  obtenerPeriodos,
+  crearPeriodo,
+  editarPeriodo,
+  eliminarPeriodo
+} from "../Services/periodoServices";
+import CustomAlert from "../Components/alert";
+import ConfirmModal from "../Components/confirmacion";
 import "../Styles/periodos.css";
 
 function Periodos() {
   const [periodos, setPeriodos] = useState([]);
   const [mostrarModal, setMostrarModal] = useState(false);
+  const [modoEditar, setModoEditar] = useState(false);
+  const [periodoEditandoId, setPeriodoEditandoId] = useState(null);
+  const [menuAbierto, setMenuAbierto] = useState(null);
 
   const [nombre, setNombre] = useState("");
   const [fechaInicio, setFechaInicio] = useState("");
   const [fechaFin, setFechaFin] = useState("");
 
+  const [alertaVisible, setAlertaVisible] = useState(false);
+  const [alertaMensaje, setAlertaMensaje] = useState("");
+  const [alertaTipo, setAlertaTipo] = useState("success");
+
+  const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false);
+  const [periodoAEliminar, setPeriodoAEliminar] = useState(null);
+
   const navigate = useNavigate();
+
+  const mostrarAlerta = (mensaje, tipo = "success") => {
+    setAlertaMensaje(mensaje);
+    setAlertaTipo(tipo);
+    setAlertaVisible(true);
+
+    setTimeout(() => {
+      setAlertaVisible(false);
+    }, 3000);
+  };
 
   const cargarPeriodos = async () => {
     try {
@@ -19,7 +46,7 @@ function Periodos() {
       setPeriodos(res.data);
     } catch (error) {
       console.error(error);
-      alert("Error al cargar períodos");
+      mostrarAlerta("Error al cargar períodos", "error");
     }
   };
 
@@ -50,24 +77,81 @@ function Periodos() {
     });
   }, [periodos]);
 
-  const handleCrearPeriodo = async (e) => {
+  const limpiarFormulario = () => {
+    setNombre("");
+    setFechaInicio("");
+    setFechaFin("");
+    setModoEditar(false);
+    setPeriodoEditandoId(null);
+  };
+
+  const cerrarModal = () => {
+    limpiarFormulario();
+    setMostrarModal(false);
+  };
+
+  const handleGuardarPeriodo = async (e) => {
     e.preventDefault();
 
     try {
-      await crearPeriodo({
-        nombre,
-        fechaInicio,
-        fechaFin
-      });
+      if (modoEditar) {
+        await editarPeriodo(periodoEditandoId, {
+          nombre,
+          fechaInicio,
+          fechaFin
+        });
+        mostrarAlerta("Período actualizado correctamente", "success");
+      } else {
+        await crearPeriodo({
+          nombre,
+          fechaInicio,
+          fechaFin
+        });
+        mostrarAlerta("Período creado correctamente", "success");
+      }
 
-      setNombre("");
-      setFechaInicio("");
-      setFechaFin("");
-      setMostrarModal(false);
+      cerrarModal();
       cargarPeriodos();
     } catch (error) {
       console.error(error);
-      alert("Error al crear período");
+      mostrarAlerta(
+        error?.response?.data?.message || "Error al guardar período",
+        "error"
+      );
+    }
+  };
+
+  const abrirEditar = (periodo) => {
+    setModoEditar(true);
+    setPeriodoEditandoId(periodo._id);
+    setNombre(periodo.nombre || "");
+    setFechaInicio(periodo.fechaInicio?.slice(0, 10) || "");
+    setFechaFin(periodo.fechaFin?.slice(0, 10) || "");
+    setMostrarModal(true);
+    setMenuAbierto(null);
+  };
+
+  const pedirEliminarPeriodo = (periodo) => {
+    setPeriodoAEliminar(periodo);
+    setMostrarConfirmacion(true);
+    setMenuAbierto(null);
+  };
+
+  const confirmarEliminarPeriodo = async () => {
+    if (!periodoAEliminar) return;
+
+    try {
+      await eliminarPeriodo(periodoAEliminar._id);
+      mostrarAlerta("Período eliminado correctamente", "success");
+      setMostrarConfirmacion(false);
+      setPeriodoAEliminar(null);
+      cargarPeriodos();
+    } catch (error) {
+      console.error(error);
+      mostrarAlerta(
+        error?.response?.data?.message || "No se pudo eliminar el período",
+        "error"
+      );
     }
   };
 
@@ -88,6 +172,27 @@ function Periodos() {
 
   return (
     <div className="periodos-page">
+      <CustomAlert
+        visible={alertaVisible}
+        message={alertaMensaje}
+        type={alertaTipo}
+        onClose={() => setAlertaVisible(false)}
+      />
+
+      <ConfirmModal
+        visible={mostrarConfirmacion}
+        title="Eliminar período"
+        message={`¿Deseas eliminar el ${periodoAEliminar?.nombre}?`}
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+        type="danger"
+        onConfirm={confirmarEliminarPeriodo}
+        onCancel={() => {
+          setMostrarConfirmacion(false);
+          setPeriodoAEliminar(null);
+        }}
+      />
+
       <div className="periodos-header">
         <div className="periodos-header-left">
           <h1>Gestión de Períodos</h1>
@@ -97,7 +202,10 @@ function Periodos() {
         <div className="periodos-header-right">
           <button
             className="btn-crear-periodo"
-            onClick={() => setMostrarModal(true)}
+            onClick={() => {
+              limpiarFormulario();
+              setMostrarModal(true);
+            }}
           >
             + Crear nuevo período
           </button>
@@ -157,6 +265,28 @@ function Periodos() {
                   >
                     Ver Materias
                   </span>
+
+                  <div className="periodo-actions">
+                    <button
+                      className="periodo-menu-btn"
+                      onClick={() =>
+                        setMenuAbierto(menuAbierto === periodo._id ? null : periodo._id)
+                      }
+                    >
+                      ⋯
+                    </button>
+
+                    {menuAbierto === periodo._id && (
+                      <div className="periodo-menu">
+                        <button onClick={() => abrirEditar(periodo)}>
+                          Editar
+                        </button>
+                        <button onClick={() => pedirEliminarPeriodo(periodo)}>
+                          Eliminar
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -171,9 +301,9 @@ function Periodos() {
       {mostrarModal && (
         <div className="modal-overlay">
           <div className="modal-box">
-            <h2>Crear nuevo período</h2>
+            <h2>{modoEditar ? "Editar período" : "Crear nuevo período"}</h2>
 
-            <form className="modal-form" onSubmit={handleCrearPeriodo}>
+            <form className="modal-form" onSubmit={handleGuardarPeriodo}>
               <div>
                 <label>Nombre del período</label>
                 <input
@@ -209,13 +339,13 @@ function Periodos() {
                 <button
                   type="button"
                   className="btn-cancelar"
-                  onClick={() => setMostrarModal(false)}
+                  onClick={cerrarModal}
                 >
                   Cancelar
                 </button>
 
                 <button type="submit" className="btn-guardar">
-                  Guardar
+                  {modoEditar ? "Guardar cambios" : "Guardar"}
                 </button>
               </div>
             </form>

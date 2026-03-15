@@ -14,4 +14,12 @@ function auth(req, res, next) {
     }
 }
 
-module.exports = auth;
+function soloAdmin(req, res, next) {
+  if (req.user?.rol !== 'admin') {
+    return res.status(403).json({ message: 'Acceso denegado. Solo el administrador puede realizar esta acción.' });
+  }
+
+  next();
+}
+
+module.exports = auth, soloAdmin;

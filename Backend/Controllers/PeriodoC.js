@@ -1,6 +1,7 @@
 const Periodo = require('../Model/PeriodoM');
 const Materia = require('../Model/MateriasM');
 const Actividad = require('../Model/ActividadesM');
+const Usuario = require('../Model/UsuarioM')
 
 function crearPeriodo(req, res) {
   const periodoNuevo = new Periodo({
@@ -16,7 +17,8 @@ function crearPeriodo(req, res) {
 }
 
 function obtenerPeriodos(req, res) {
-  Periodo.find({ usuarioId: req.user.id }).sort({ fechaInicio: -1 })
+  Periodo.find({ usuarioId: req.user.id })
+    .sort({ fechaInicio: -1 })
     .then(async (periodos) => {
       const hoy = new Date();
 
@@ -49,12 +51,19 @@ function obtenerPeriodos(req, res) {
             });
           }
 
-          const progresoPct = totalActividades === 0 ? 0 : Math.round((completadas / totalActividades) * 100);
+          const progresoPct =
+            totalActividades === 0
+              ? 0
+              : Math.round((completadas / totalActividades) * 100);
 
           return {
             ...p.toObject(),
             estadoPeriodo,
-            progresoAcademico: { totalActividades, completadas, progresoPct }
+            progresoAcademico: {
+              totalActividades,
+              completadas,
+              progresoPct
+            }
           };
         })
       );
@@ -65,29 +74,132 @@ function obtenerPeriodos(req, res) {
 }
 
 function actualizarPeriodo(req, res) {
-  const id = req.body.id;
+  const id = req.params.id;
 
   Periodo.findOneAndUpdate(
     { _id: id, usuarioId: req.user.id },
-    req.body,
-    { new: true }
+    {
+      nombre: req.body.nombre,
+      fechaInicio: req.body.fechaInicio,
+      fechaFin: req.body.fechaFin
+    },
+    { new: true, runValidators: true }
   )
     .then(data => {
-      if (!data) return res.status(404).json({ message: 'Periodo no encontrado' });
+      if (!data) {
+        return res.status(404).json({ message: 'Periodo no encontrado' });
+      }
       res.json(data);
     })
     .catch(err => res.status(500).json({ message: err.message }));
 }
 
-function eliminarPeriodo(req, res) {
-  const id = req.params.id;
+async function eliminarPeriodo(req, res) {
+  try {
+    const id = req.params.id;
 
-  Periodo.findOneAndDelete({ _id: id, usuarioId: req.user.id })
-    .then(data => {
-      if (!data) return res.status(404).json({ message: 'Periodo no encontrado' });
-      res.json({ message: 'Periodo eliminado correctamente' });
-    })
-    .catch(err => res.status(500).json({ message: err.message }));
+    const periodo = await Periodo.findOne({
+      _id: id,
+      usuarioId: req.user.id
+    });
+
+    if (!periodo) {
+      return res.status(404).json({ message: 'Periodo no encontrado' });
+    }
+
+    const totalMaterias = await Materia.countDocuments({
+      periodoId: id,
+      usuarioId: req.user.id
+    });
+
+    if (totalMaterias > 0) {
+      return res.status(400).json({
+        message: 'No se puede eliminar el período porque tiene materias asociadas'
+      });
+    }
+
+    await Periodo.findOneAndDelete({
+      _id: id,
+      usuarioId: req.user.id
+    });
+
+    res.json({ message: 'Periodo eliminado correctamente' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 }
 
-module.exports = { crearPeriodo, obtenerPeriodos, actualizarPeriodo, eliminarPeriodo };
+function obtenerPeriodosAdmin(req, res) {
+  Periodo.find({})
+    .sort({ fechaInicio: -1 })
+    .then(async (periodos) => {
+      const hoy = new Date();
+
+      const periodosConDatos = await Promise.all(
+        periodos.map(async (p) => {
+          let estadoPeriodo = 'por_empezar';
+          if (hoy >= p.fechaInicio && hoy <= p.fechaFin) estadoPeriodo = 'en_curso';
+          if (hoy > p.fechaFin) estadoPeriodo = 'finalizado';
+
+          const usuario = await Usuario.findById(p.usuarioId, {
+            nombre: 1,
+            apellido: 1,
+            email: 1
+          });
+
+          const materias = await Materia.find(
+            { periodoId: p._id, usuarioId: p.usuarioId },
+            { _id: 1 }
+          );
+
+          const materiaIds = materias.map((m) => m._id);
+
+          let totalActividades = 0;
+          let completadas = 0;
+
+          if (materiaIds.length > 0) {
+            totalActividades = await Actividad.countDocuments({
+              usuarioId: p.usuarioId,
+              materiaId: { $in: materiaIds }
+            });
+
+            completadas = await Actividad.countDocuments({
+              usuarioId: p.usuarioId,
+              materiaId: { $in: materiaIds },
+              estado: 'completada'
+            });
+          }
+
+          const progresoPct =
+            totalActividades === 0
+              ? 0
+              : Math.round((completadas / totalActividades) * 100);
+
+          return {
+            ...p.toObject(),
+            estadoPeriodo,
+            totalMaterias: materias.length,
+            progresoAcademico: {
+              totalActividades,
+              completadas,
+              progresoPct
+            },
+            usuario: usuario
+              ? {
+                  id: usuario._id,
+                  nombre: usuario.nombre,
+                  apellido: usuario.apellido,
+                  email: usuario.email
+                }
+              : null
+          };
+        })
+      );
+
+      res.json(periodosConDatos);
+    })
+    .catch((err) => res.status(500).json({ message: err.message }));
+}
+
+
+module.exports = {crearPeriodo, obtenerPeriodos, actualizarPeriodo, eliminarPeriodo, obtenerPeriodosAdmin};

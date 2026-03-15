@@ -9,6 +9,8 @@ import {
 } from "../Services/actividadesService";
 import { obtenerMaterias } from "../Services/materiaServices";
 import { obtenerPeriodos } from "../Services/periodoServices";
+import CustomAlert from "../Components/alert";
+import ConfirmModal from "../Components/confirmacion";
 import "../Styles/actividades.css";
 
 function Actividades() {
@@ -32,8 +34,25 @@ function Actividades() {
   const [tiempoEstimadoHoras, setTiempoEstimadoHoras] = useState("");
   const [materiaId, setMateriaId] = useState("");
 
+  const [alertaVisible, setAlertaVisible] = useState(false);
+  const [alertaMensaje, setAlertaMensaje] = useState("");
+  const [alertaTipo, setAlertaTipo] = useState("success");
+
+  const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false);
+  const [actividadAEliminar, setActividadAEliminar] = useState(null);
+
   const [searchParams] = useSearchParams();
   const materiaDesdeURL = searchParams.get("materia");
+
+  const mostrarAlerta = (mensaje, tipo = "success") => {
+    setAlertaMensaje(mensaje);
+    setAlertaTipo(tipo);
+    setAlertaVisible(true);
+
+    setTimeout(() => {
+      setAlertaVisible(false);
+    }, 3000);
+  };
 
   const cargarDatos = async () => {
     try {
@@ -48,7 +67,7 @@ function Actividades() {
       setPeriodos(resPeriodos.data);
     } catch (error) {
       console.error(error);
-      alert("Error al cargar actividades");
+      mostrarAlerta("Error al cargar actividades", "error");
     }
   };
 
@@ -214,6 +233,7 @@ function Actividades() {
           tiempoEstimadoHoras,
           materiaId
         });
+        mostrarAlerta("Actividad actualizada correctamente", "success");
       } else {
         await crearActividad({
           titulo,
@@ -224,6 +244,7 @@ function Actividades() {
           tiempoEstimadoHoras,
           materiaId
         });
+        mostrarAlerta("Actividad creada correctamente", "success");
       }
 
       limpiarFormulario();
@@ -231,33 +252,40 @@ function Actividades() {
       cargarDatos();
     } catch (error) {
       console.error(error);
-      alert(error?.response?.data?.message || "No se pudo guardar la actividad");
+      mostrarAlerta(
+        error?.response?.data?.message || "No se pudo guardar la actividad",
+        "error"
+      );
     }
   };
 
   const cambiarEstado = async (actividad, nuevoEstado) => {
     if (actividad.estado === "completada" && nuevoEstado !== "completada") {
-      alert("Una actividad completada ya no puede volver a estados anteriores");
+      mostrarAlerta("Una actividad completada ya no puede volver a estados anteriores", "warning");
       return;
     }
 
     if (actividad.estado === "vencida") {
-      alert("Una actividad vencida no puede cambiar de estado");
+      mostrarAlerta("Una actividad vencida no puede cambiar de estado", "warning");
       return;
     }
 
     try {
       await editarEstadoActividad(actividad._id, nuevoEstado);
+      mostrarAlerta("Estado actualizado correctamente", "success");
       cargarDatos();
     } catch (error) {
       console.error(error);
-      alert(error?.response?.data?.message || "No se pudo cambiar el estado");
+      mostrarAlerta(
+        error?.response?.data?.message || "No se pudo cambiar el estado",
+        "error"
+      );
     }
   };
 
   const abrirEditar = (actividad) => {
     if (actividad.estado === "completada" || actividad.estado === "vencida") {
-      alert("No se puede editar una actividad completada o vencida");
+      mostrarAlerta("No se puede editar una actividad completada o vencida", "warning");
       return;
     }
 
@@ -274,22 +302,32 @@ function Actividades() {
     setMenuAbierto(null);
   };
 
-  const borrarActividad = async (actividad) => {
+  const pedirEliminarActividad = (actividad) => {
     if (actividad.estado === "completada" || actividad.estado === "vencida") {
-      alert("No se puede eliminar una actividad completada o vencida");
+      mostrarAlerta("No se puede eliminar una actividad completada o vencida", "warning");
       return;
     }
 
-    const confirmar = window.confirm("¿Deseas eliminar esta actividad?");
-    if (!confirmar) return;
+    setActividadAEliminar(actividad);
+    setMostrarConfirmacion(true);
+    setMenuAbierto(null);
+  };
+
+  const confirmarEliminarActividad = async () => {
+    if (!actividadAEliminar) return;
 
     try {
-      await eliminarActividad(actividad._id);
-      setMenuAbierto(null);
+      await eliminarActividad(actividadAEliminar._id);
+      mostrarAlerta("Actividad eliminada correctamente", "success");
+      setMostrarConfirmacion(false);
+      setActividadAEliminar(null);
       cargarDatos();
     } catch (error) {
       console.error(error);
-      alert(error?.response?.data?.message || "No se pudo eliminar la actividad");
+      mostrarAlerta(
+        error?.response?.data?.message || "No se pudo eliminar la actividad",
+        "error"
+      );
     }
   };
 
@@ -302,6 +340,27 @@ function Actividades() {
 
   return (
     <div className="actividades-page">
+      <CustomAlert
+        visible={alertaVisible}
+        message={alertaMensaje}
+        type={alertaTipo}
+        onClose={() => setAlertaVisible(false)}
+      />
+
+      <ConfirmModal
+        visible={mostrarConfirmacion}
+        title="Eliminar actividad"
+        message={`¿Deseas eliminar la actividad "${actividadAEliminar?.titulo || ""}"?`}
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+        type="danger"
+        onConfirm={confirmarEliminarActividad}
+        onCancel={() => {
+          setMostrarConfirmacion(false);
+          setActividadAEliminar(null);
+        }}
+      />
+
       <div className="actividades-header">
         <div className="actividades-header-left">
           <h1>Gestión de Actividades</h1>
@@ -461,7 +520,7 @@ function Actividades() {
                       <button disabled={bloqueada} onClick={() => abrirEditar(actividad)}>
                         Editar
                       </button>
-                      <button disabled={bloqueada} onClick={() => borrarActividad(actividad)}>
+                      <button disabled={bloqueada} onClick={() => pedirEliminarActividad(actividad)}>
                         Eliminar
                       </button>
                     </div>

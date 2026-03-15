@@ -12,3 +12,15 @@ export const register = (nombre, apellido, email, password) => {
         password
     });
 };
+
+export const registerAdmin = (data) => {
+  return api.post("/auth/admin/register", data);
+};
+
+export const obtenerUsuarios = () => {
+  return api.get("/auth/listar");
+};
+
+export const editarUsuarioAdmin = (id, data) => {
+  return api.put(`/auth/editar/${id}`, data);
+};
