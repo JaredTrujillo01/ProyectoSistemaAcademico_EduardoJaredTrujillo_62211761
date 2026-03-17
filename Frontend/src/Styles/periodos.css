@@ -86,11 +86,11 @@
 .periodo-badge {
   position: absolute;
   top: 16px;
-  right: 56px;
-  padding: 6px 12px;
+  right: 16px;
+  padding: 7px 14px;
   border-radius: 999px;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   z-index: 2;
 }
 
@@ -167,10 +167,10 @@
   background: linear-gradient(135deg, #2f80ed, #6c63ff);
   color: white;
   padding: 18px 20px;
-  min-height: 120px;
+  min-height: 140px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   position: relative;
 }
 
@@ -181,13 +181,16 @@
 .periodo-card-top small {
   text-transform: uppercase;
   font-size: 11px;
-  opacity: 0.8;
-  margin-bottom: 10px;
+  opacity: 0.85;
+  margin-bottom: 8px;
+  display: block;
 }
 
 .periodo-card-top h3 {
   font-size: 18px;
   line-height: 1.35;
+  margin: 0;
+  max-width: 85%;
 }
 
 .periodo-card-body {
